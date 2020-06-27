@@ -1,22 +1,52 @@
 import React from "react"
-import { Link } from "gatsby"
-
+import styled from 'styled-components'
+import { useStaticQuery, graphql } from "gatsby"
 import Layout from "../components/layout"
-import Image from "../components/image"
 import SEO from "../components/seo"
 
-const IndexPage = () => (
-  <Layout>
+const Card = styled.div`
+  display: flex;
+  transition: 1s;
+  &:hover {
+    box-shadow: 1px 1px 5px 5px rgba(0,0,0,0.27);
+  }
+`
+
+
+const IndexPage = () => {
+  const data = useStaticQuery(graphql`
+    query {
+      allProductsCsv {
+        edges {
+          node {
+            id,
+            productName,
+            amount,
+            price,
+            unit,
+            available,
+            imageUrl,
+          }
+        }
+      }
+    }
+  `);
+
+  console.log(data.allProductsCsv)
+
+ return (<Layout>
     <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link> <br />
-    <Link to="/using-typescript/">Go to "Using TypeScript"</Link>
-  </Layout>
-)
+    {data.allProductsCsv.edges.map(edge => (<Card key={edge.node.id}>
+      <div>
+        {edge.node.productName}
+      </div>
+      <div>
+        {edge.node.price}
+      </div>
+      <img src={edge.node.imageUrl} alt={edge.node.productName} style={{ objectFit: 'contain', width: '100px' }}/>
+    </Card>))
+    }
+  </Layout>);
+};
 
 export default IndexPage
