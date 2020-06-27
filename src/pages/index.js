@@ -32,8 +32,6 @@ const IndexPage = () => {
     }
   `);
 
-  console.log(data.allProductsCsv)
-
  return (<Layout>
     <SEO title="Home" />
     {data.allProductsCsv.edges.map(edge => (<Card key={edge.node.id}>
